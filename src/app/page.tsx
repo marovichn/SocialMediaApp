@@ -1,11 +1,6 @@
-import { FC } from 'react'
+import { db } from "@lib/db"
 
-interface pageProps {
-  
+export default async function Home(){
+
+  return <div className="text-red-500">hello</div>
 }
-
-const page: FC<pageProps> = ({}) => {
-  return <div>Hello World</div>
-}
-
-export default page
