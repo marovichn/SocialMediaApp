@@ -1,5 +1,5 @@
-import { NextAuthOptions } from "next-auth"
+/* import { NextAuthOptions } from "next-auth"
 
-export default authOptions: NextAuthOptions = {
-    
-}
+export const authOptions:NextAuthOptions = {
+    adapter:
+} */
