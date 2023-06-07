@@ -1,4 +1,3 @@
-import Button from '@components/UI/Button'
 import { FC } from 'react'
 
 interface pageProps {
@@ -6,7 +5,7 @@ interface pageProps {
 }
 
 const page: FC<pageProps> = ({}) => {
-  return <div><Button variant="default" size="lg">Check</Button></div>
+  return <div className='bg-black test'>HII</div>
 }
 
 export default page

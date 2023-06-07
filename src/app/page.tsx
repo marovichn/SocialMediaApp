@@ -1,3 +1,3 @@
-export default async function Home(){
-  return <div className="text-red-500 bg-black">hello</div>
+export default async function Home() {
+  return <div className='text-red-500 bg-black'>hello</div>;
 }
