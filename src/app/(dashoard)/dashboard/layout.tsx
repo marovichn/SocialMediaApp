@@ -47,10 +47,16 @@ const layout = async ({ children }: LayoutProps) => {
                 {sidebarOptions.map((option) => {
                   const Icon = Icons[option.Icon];
                   return (
-                    <li className="rounded-md bg-lime-100 py-3" key={option.id}>
-                      <Link className='flex items-center' href={option.href}>
-                        <div className=' px-3'>
-                          <Icon size={15} />
+                    <li
+                      className='hover:rounded-md hover:bg-gray-100 py-3 transition-all hover:ml-5'
+                      key={option.id}
+                    >
+                      <Link
+                        className='flex items-center ml-1'
+                        href={option.href}
+                      >
+                        <div className='px-3'>
+                          <Icon size={15} className="text-lime-600" />
                         </div>
                         {option.name}
                       </Link>

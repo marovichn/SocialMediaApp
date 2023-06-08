@@ -2,7 +2,7 @@ import AddFriendButton from '@components/AddFriendButton'
 import { FC } from 'react'
 
 const page: FC = () => {
-  return <main className='pt-8'>
+  return <main className='pt-8 w-full h-full px-10'>
     <h1 className='font-bold text-5xl mb-8'>Add a friend</h1>
 
     <AddFriendButton></AddFriendButton>
