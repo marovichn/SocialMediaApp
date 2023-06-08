@@ -7,6 +7,7 @@ import { Icons, Icon } from "@components/Icons";
 import Image from "next/image";
 import SignOutButton from "@components/SignOutButton";
 import FriendRequestsButton from "@components/FriendRequestsButton";
+import { fetchRedis } from "@helpers/redis";
 
 interface LayoutProps {
   children: ReactNode;
@@ -25,6 +26,8 @@ const sidebarOptions: SidebarOption[] = [
 
 const layout = async ({ children }: LayoutProps) => {
   const session = await getServerSession(authOptions);
+
+  const unseenReqCount = (await fetchRedis("smembers", `user:${session?.user.id}:incoming_friend_requests`) as User[]).length;
 
   if (!session) notFound();
 
@@ -69,7 +72,7 @@ const layout = async ({ children }: LayoutProps) => {
                   );
                 })}
                 <li className='hover:rounded-md hover:bg-gray-100 py-3 transition-all hover:ml-5 hover:border-lime-600 hover:border'>
-                  <FriendRequestsButton />
+                  <FriendRequestsButton initialUnseenRequestCount={unseenReqCount} sessionId={session.user.id} />
                 </li>
               </ul>
             </li>
