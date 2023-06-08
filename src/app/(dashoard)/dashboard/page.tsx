@@ -8,8 +8,8 @@ const page =async() => {
   const session = await getServerSession(authOptions);
   
   return (
-    <div className='bg-black text-white'>
-      Dashboard <pre>{JSON.stringify(session)}</pre>
+    <div>
+      Dashboard 
       {session && <Button>Sign Out</Button>}
     </div>
   );
