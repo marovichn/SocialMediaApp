@@ -17,8 +17,9 @@ const page = async ({}) => {
 
   const requestsEmails = await Promise.all(
     incomingSenderIds.map(async (senderId)=>{
-        const sender = await fetchRedis("get", `user:${senderId}`) as User;
-        console.log(sender.email, sender);
+        const senderRes = await fetchRedis("get", `user:${senderId}`) as string;
+        const sender = JSON.parse(senderRes) as User;
+        
 
         return {
             senderId,
