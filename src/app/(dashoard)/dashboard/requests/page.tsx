@@ -30,7 +30,7 @@ const page = async ({}) => {
 
   return (
     <main className='pt-8 w-full h-full px-10'>
-      <h1 className='font-bold text-5xl mb-8'>Friend Requests</h1>
+      <h1 className='font-bold text-5xl mb-8'>{requestsEmails.length === 0 ? "Add some friends!" : "Friend Requests"}</h1>
       <div className='flex flex-col gap-4'>
         <FriendRequests
           incomingFriendRequests={requestsEmails}
