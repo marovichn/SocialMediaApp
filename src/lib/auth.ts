@@ -1,27 +1,26 @@
-import { NextAuthOptions } from "next-auth"
+import { NextAuthOptions } from "next-auth";
 import { UpstashRedisAdapter } from "@next-auth/upstash-redis-adapter";
 import { db } from "./db";
-import GoogleProvider from "next-auth/providers/google"
+import GoogleProvider from "next-auth/providers/google";
 import { fetchRedis } from "@/helpers/redis";
 
-function getGoogleCredentials(){
-const clientId = process.env.GOOGLE_CLIENT_ID;
-const clientSecret =  process.env.GOOGLE_CLIENT_SECRET;
-const nextJWTSecret = process.env.NEXT_JWT_SECRET;
+function getGoogleCredentials() {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const nextJWTSecret = process.env.NEXT_JWT_SECRET;
 
-
-if(!clientId || clientId.length === 0){
+  if (!clientId || clientId.length === 0) {
     throw new Error("Missing GOOGLE_CLIENT_ID");
-}
+  }
 
-if(!clientSecret || clientSecret.length === 0){
+  if (!clientSecret || clientSecret.length === 0) {
     throw new Error("Missing GOOGLE_CLIENT_SECRET");
-}
-if(!nextJWTSecret || nextJWTSecret.length === 0){
+  }
+  if (!nextJWTSecret || nextJWTSecret.length === 0) {
     throw new Error("Missing JWT_SECRET");
-}
+  }
 
-return {clientId, clientSecret, nextJWTSecret};
+  return { clientId, clientSecret, nextJWTSecret };
 }
 
 export const authOptions: NextAuthOptions = {
@@ -78,4 +77,5 @@ export const authOptions: NextAuthOptions = {
       return "/dashboard";
     },
   },
+  debug: process.env.NODE_ENV !== "production",
 };

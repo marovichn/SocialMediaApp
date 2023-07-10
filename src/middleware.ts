@@ -7,7 +7,7 @@ export default withAuth(
     const pathname = req.nextUrl.pathname;
 
     // Manage route protection
-    const isAuth = await getToken({ req });
+    const isAuth = await getToken({ req, secret: process.env.NEXT_JWT_SECRET});
     const isLoginPage = pathname.startsWith("/login");
 
     const sensitiveRoutes = ["/dashboard"];

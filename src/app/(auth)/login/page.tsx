@@ -4,7 +4,7 @@ import Button from "@components/UI/Button";
 import { FC, useState } from "react";
 import {AiOutlineGoogle} from "react-icons/ai";
 import {signIn} from "next-auth/react"
-import { toast } from "react-hot-toast";
+import { toast }from "react-hot-toast";
 
 interface pageProps {}
 
