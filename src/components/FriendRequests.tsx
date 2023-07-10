@@ -19,14 +19,14 @@ const FrendRequests: FC<FrendRequestsProps> = ({
     incomingFriendRequests
   );
   const acceptHandler =async (senderId: string)=>{
-    await axios.post("/api/requests/accept", {id: senderId})
+    await axios.post("/api/friends/accept", {id: senderId})
 
     setFriendRequests((prev)=>prev.filter((req)=> req.senderId !== senderId));
 
     router.refresh();
   };
   const denyHandler = async (senderId: string)=>{
-    await axios.post("/api/requests/deny", { id: senderId });
+    await axios.post("/api/friends/deny", { id: senderId });
 
     setFriendRequests((prev) =>
       prev.filter((req) => req.senderId !== senderId)
