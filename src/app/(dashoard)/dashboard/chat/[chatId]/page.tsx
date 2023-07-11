@@ -52,7 +52,7 @@ const page: FC<PageProps> = async ({ params }: PageProps) => {
   const initialMessages= (await getChatMessages(chatId)as any);
 
   return (
-    <div className='flex-1 flex flex-col justify-between h-full max-h-[calc(100vh-6rem)]'>
+    <div className='flex-1 flex flex-col justify-between h-full max-h-[calc(100vh-1rem)]'>
       <div className='flex sm:items-center justify-between py-3 border-b border-gray-200'>
         <div className='relative flex items-center space-x-4'>
           <div className='relative'>
