@@ -6,8 +6,10 @@ import { ReactNode } from "react";
 import { Icons, Icon } from "@components/Icons";
 import Image from "next/image";
 import SignOutButton from "@components/SignOutButton";
+import SideBarChatList from "@components/SideBarChatList";
 import FriendRequestsButton from "@components/FriendRequestsButton";
 import { fetchRedis } from "@helpers/redis";
+import { getFriendsByUserId } from "@helpers/get-friends-by-user-id";
 
 interface LayoutProps {
   children: ReactNode;
@@ -31,19 +33,28 @@ const layout = async ({ children }: LayoutProps) => {
 
   if (!session) notFound();
 
+  const friends = await getFriendsByUserId(session.user.id);
+
   return (
     <div className='w-full flex h-screen'>
       <div className='flex h-full w-full max-w-sm grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
         <Link href='/dashboard' className='flex h-16 shrink-0 items-center'>
           <Icons.Logo className='h-8 w-auto text-lime-600' />
         </Link>
-        <div className='text-xs font-semibold leading-6 text-gray-400 '>
-          Your chats
-        </div>
+        {friends.length > 0 ? (
+          <div className='text-xs font-semibold leading-6 text-gray-400 '>
+            Your chats
+          </div>
+        ) : (
+          <div className='text-xs font-semibold leading-6 text-gray-400 '>
+            Add some friends
+          </div>
+        )}
         <nav className='flex flex-1 flex-col'>
           <ul role='list' className='flex flex-1 flex-col gap-y-7'>
-            <li>Chat 1</li>
-            <li>Chat 2</li>
+            <li>
+              <SideBarChatList friends={friends} />
+            </li>
             <li>
               <div className='text-xs font-semibold leading-6 text-gray-400'>
                 Overview
@@ -72,7 +83,10 @@ const layout = async ({ children }: LayoutProps) => {
                   );
                 })}
                 <li className='hover:rounded-md hover:bg-gray-100 py-3 transition-all hover:ml-5 hover:border-lime-600 hover:border'>
-                  <FriendRequestsButton initialUnseenRequestCount={unseenReqCount} sessionId={session.user.id} />
+                  <FriendRequestsButton
+                    initialUnseenRequestCount={unseenReqCount}
+                    sessionId={session.user.id}
+                  />
                 </li>
               </ul>
             </li>
