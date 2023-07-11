@@ -26,6 +26,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
   return (
     <ul className='max-h-[25rem] overflow-y-auto -mx-2 space-y-1' role='list'>
       {friends.sort().map((friend) => {
+        const selectedClasses = pathname?.includes(friend.id) ? 'flex gap-1 items-center justify-between bg-white border-lime-500 border rounded-md p-4 text-gray-700 group leading-6 transition' : "flex gap-1 items-center justify-between bg-white hover:border-lime-500 hover:border border-transparent border rounded-md p-4 text-gray-700 group leading-6 transition";
         const unseenMessagesCount: any = unseenMessages?.filter(
           (msg) => msg.senderId === friend.id
         ).length;
@@ -33,8 +34,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
         return (
           <li key={friend.id}>
             <a
-              className='flex gap-1 items-center justify-between bg-white hover:border-lime-500 
-              hover:border border-transparent border rounded-md p-4 text-gray-700 group leading-6 transition'
+              className={selectedClasses}
               href={`/dashboard/chat/${chatHrefConstructor(
                 sessionId,
                 friend.id
@@ -49,8 +49,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
                   height={20}
                 />
                 <div className='flex flex-col'>
-                  <span className='font-bold text-md'>{friend.name}</span>
-                  <div className='text-xs'>{friend.email}</div>
+                  <span className='font-bold text-lg'>{friend.name}</span>
                 </div>
               </div>
               <div>
