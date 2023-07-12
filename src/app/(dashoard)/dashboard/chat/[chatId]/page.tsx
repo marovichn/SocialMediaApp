@@ -29,6 +29,8 @@ async function getChatMessages(chatId: string) {
     const reversedMessages = dbMessages.reverse();
 
     const messages = messageArrayValidator.parse(reversedMessages);
+
+    return messages;
   } catch (err) {
     notFound();
   }
@@ -49,7 +51,7 @@ const page: FC<PageProps> = async ({ params }: PageProps) => {
 
   const chatPartnerId = user.id === userId1 ? userId2 : userId1;
   const chatPartner = (await db.get(`user:${chatPartnerId}`)) as User;
-  const initialMessages= (await getChatMessages(chatId)as any);
+  const initialMessages = (await getChatMessages(chatId)) as any;
 
   return (
     <div className='flex-1 flex flex-col justify-between h-full max-h-[calc(100vh-1rem)]'>
@@ -72,14 +74,12 @@ const page: FC<PageProps> = async ({ params }: PageProps) => {
                 {chatPartner.name}
               </span>
             </div>
-            <span className=" text-sm text-gray-600">{chatPartner.email}</span>
+            <span className=' text-sm text-gray-600'>{chatPartner.email}</span>
           </div>
         </div>
       </div>
-      
-      {/* <Messages initialMessages={initialMessages} sessionId={session.user.id}/>
- */}
-      <ChatInput chatId={chatId} chatPartner={chatPartner}/>
+      <Messages initialMessages={initialMessages} sessionId={session.user.id} />
+      <ChatInput chatId={chatId} chatPartner={chatPartner} />
     </div>
   );
 };
