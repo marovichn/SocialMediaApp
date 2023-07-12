@@ -30,6 +30,10 @@ export async function POST(req: Request){
 
     const sender = JSON.parse(await fetchRedis("get", `user:${session.user.id}`) as string)as User;
 
+    if(text.trim() === ""){
+        return new Response("Ivalid payload (text)", { status: 401 });
+    }
+
     const timestamp = Date.now();
     const messageData: Message= {
         id: nanoid(),
