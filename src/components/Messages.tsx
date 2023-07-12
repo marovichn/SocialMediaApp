@@ -77,6 +77,7 @@ const Messages: FC<MessagesProps> = ({
                 sizes="1"
                 className="rounded-full mb-3 ml-1 mr-1"
                   fill
+                  
                   src={
                     isCurrentUser ? (sessionImg as string) : chatPartner.image
                   }
