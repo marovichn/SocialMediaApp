@@ -1,5 +1,10 @@
+import { fetchRedis } from "@helpers/redis";
 import { authOptions } from "@lib/auth";
+import { db } from "@lib/db";
 import { getServerSession } from "next-auth";
+import { nanoid} from "nanoid";
+import { messageValidator } from "@lib/validation/message";
+import { z } from "zod";
 
 export async function POST(req: Request){
     try{
@@ -18,7 +23,36 @@ export async function POST(req: Request){
 
     const friendId = session.user.id === userId1 ? userId2: userId1;
 
+    const friendList = await fetchRedis("smembers", `user:${session.user.id}:friends`) as string[];
+    if(!friendList.includes(friendId)){
+        return new Response("Unauthorized", { status: 401 });
+    }
 
-    
-    }catch(err){}
+    const sender = JSON.parse(await fetchRedis("get", `user:${session.user.id}`) as string)as User;
+
+    const timestamp = Date.now();
+    const messageData: Message= {
+        id: nanoid(),
+        senderId: session.user.id,
+        recieverId: friendId,
+        text: text,
+        timestamp: timestamp
+    }
+
+    const message = messageValidator.parse(messageData);
+
+    //validated, sending message
+    await db.zadd(`chat:${chatId}:messages`, {
+        score: timestamp,
+        member: JSON.stringify(message)
+    })
+
+    return new Response("Success", { status: 200 });
+    }catch(err){
+        if (err instanceof z.ZodError) {
+          return new Response("Invalid request payload", { status: 422 });
+        }
+
+        return new Response("Invalid request", { status: 400 });
+    }
 }
