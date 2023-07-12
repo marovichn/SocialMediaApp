@@ -69,11 +69,13 @@ const Messages: FC<MessagesProps> = ({
               <div
                 className={cn("relative w-6 h-6", {
                   "order-2": isCurrentUser,
-                  "order-1": !isCurrentUser,
-                  invisible: hasNextMessageFromSameUser,
+                  "order-1 mr-2": !isCurrentUser,
+                  "invisible": hasNextMessageFromSameUser,
                 })}
               >
                 <Image
+                sizes="1"
+                className="rounded-full mb-3 ml-1 mr-1"
                   fill
                   src={
                     isCurrentUser ? (sessionImg as string) : chatPartner.image

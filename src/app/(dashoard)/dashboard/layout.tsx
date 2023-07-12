@@ -95,6 +95,7 @@ const layout = async ({ children }: LayoutProps) => {
               <div className='flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900'>
                 <div className='relative h-8 w-8 bg-gray-50 rounded-full'>
                   <Image
+                  sizes="1"
                     fill
                     referrerPolicy='no-referrer'
                     className='rounded-full'
