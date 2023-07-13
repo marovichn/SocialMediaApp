@@ -1,6 +1,7 @@
 "use client";
 
-import { chatHrefConstructor } from "@lib/utils";
+import { pusherClient } from "@lib/pusher";
+import { chatHrefConstructor, toPusherKey } from "@lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
@@ -16,6 +17,27 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
   const pathname = usePathname();
 
   useEffect(() => {
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:chats`));
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
+
+    const chatHandler = () => {
+      console.log("new message")
+    };
+    pusherClient.bind("new_message", chatHandler);
+    const newFriendHandler = () => {
+      router.refresh();
+    };
+    pusherClient.bind("new_friend", newFriendHandler);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:chats`));
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
+      pusherClient.unbind("new_message", chatHandler);
+      pusherClient.unbind("new_friend", newFriendHandler);
+    };
+  }, []);
+
+  useEffect(() => {
     if (pathname?.includes("chat")) {
       setUnseenMessages((prev) => {
         return prev?.filter((msg) => !pathname.includes(msg.senderId));
@@ -26,7 +48,9 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
   return (
     <ul className='max-h-[25rem] overflow-y-auto -mx-2 space-y-1' role='list'>
       {friends.sort().map((friend) => {
-        const selectedClasses = pathname?.includes(friend.id) ? 'flex gap-1 items-center justify-between bg-white border-lime-500 border rounded-md p-4 text-gray-700 group leading-6 transition' : "flex gap-1 items-center justify-between bg-white hover:border-lime-500 hover:border border-transparent border rounded-md p-4 text-gray-700 group leading-6 transition";
+        const selectedClasses = pathname?.includes(friend.id)
+          ? "flex gap-1 items-center justify-between bg-white border-lime-500 border rounded-md p-4 text-gray-700 group leading-6 transition"
+          : "flex gap-1 items-center justify-between bg-white hover:border-lime-500 hover:border border-transparent border rounded-md p-4 text-gray-700 group leading-6 transition";
         const unseenMessagesCount: any = unseenMessages?.filter(
           (msg) => msg.senderId === friend.id
         ).length;

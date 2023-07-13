@@ -36,8 +36,6 @@ export async function POST(req: Request) {
       return new Response("This request is invalid", { status: 400 });
     }
 
-    const sender = JSON.parse(await db.get(`user:${idToAdd}`) as string)as User;
-
     await db.sadd(`user:${session.user.id}:friends`, idToAdd);
 
     await db.sadd(`user:${idToAdd}:friends`, session.user.id);

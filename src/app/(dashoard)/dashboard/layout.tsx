@@ -32,13 +32,12 @@ const layout = async ({ children }: LayoutProps) => {
   const unseenReqCount = (await fetchRedis("smembers", `user:${session?.user.id}:incoming_friend_requests`) as User[]).length;
 
   if (!session) notFound();
-  
 
   const friends = await getFriendsByUserId(session.user.id);
 
   return (
     <div className='w-full flex h-screen'>
-      <div className='flex h-full max-w-sm grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 w-full'>
+      <div className='flex h-full w-full max-w-sm grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
         <Link href='/dashboard' className='flex h-16 shrink-0 items-center'>
           <Icons.Logo className='h-8 w-auto text-lime-600' />
         </Link>
@@ -51,10 +50,10 @@ const layout = async ({ children }: LayoutProps) => {
             Add some friends
           </div>
         )}
-        <nav className='flex flex-1 flex-col  md:max-w-[1rem]'>
+        <nav className='flex flex-1 flex-col'>
           <ul role='list' className='flex flex-1 flex-col gap-y-7'>
             <li>
-              <SideBarChatList friends={friends} sessionId={session.user.id} />
+              <SideBarChatList friends={friends} sessionId={session.user.id}/>
             </li>
             <li>
               <div className='text-xs font-semibold leading-6 text-gray-400'>
@@ -96,7 +95,7 @@ const layout = async ({ children }: LayoutProps) => {
               <div className='flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900'>
                 <div className='relative h-8 w-8 bg-gray-50 rounded-full'>
                   <Image
-                    sizes='1'
+                  sizes="1"
                     fill
                     referrerPolicy='no-referrer'
                     className='rounded-full'
@@ -119,7 +118,7 @@ const layout = async ({ children }: LayoutProps) => {
           </ul>
         </nav>
       </div>
-      <aside className='max-h-screen container w.full'>{children}</aside>
+      {children}
     </div>
   );
 };
