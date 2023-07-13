@@ -1,59 +1,51 @@
 "use client";
 
-import { pusherClient } from "@lib/pusher";
-import { toPusherKey } from "@lib/utils";
-import { MoveRightIcon, User, UserPlus } from "lucide-react";
+import { pusherClient } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
+import { User } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 
-interface FriendRequestsButtonProps {
-  initialUnseenRequestCount: number;
+interface FriendRequestSidebarOptionsProps {
   sessionId: string;
+  initialUnseenRequestCount: number;
 }
 
-const FriendRequestsButton: FC<FriendRequestsButtonProps> = ({
-  initialUnseenRequestCount,
+const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
   sessionId,
+  initialUnseenRequestCount,
 }) => {
-  const pathname = usePathname();
+  const [unseenRequestCount, setUnseenRequestCount] = useState<number>(
+    initialUnseenRequestCount
+  );
 
   useEffect(() => {
     pusherClient.subscribe(
       toPusherKey(`user:${sessionId}:incoming_friend_requests`)
     );
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
 
-    const friendRequestHandler = ({ senderEmail }: IncomingFriendRequest) => {
-      setUnseenReqCount((prev) => prev + 1);
+    const friendRequestHandler = () => {
+      setUnseenRequestCount((prev) => prev + 1);
+    };
 
-      toast(
-        <Link href='/dashboard/requests'>
-          <div className='flex gap-4'>
-            <UserPlus className='text-black' />
-            <p className='font-medium text-lg'>{senderEmail}</p>
-          </div>
-        </Link>,
-        {
-          className:
-            "flex gap-4 items-center justify-between bg-zinc-100 rounded-md p-7 hover:bg-white transition hover:border-lime-500 hover:border border border-opacity-0 my-2",
-        }
-      );
+    const addedFriendHandler = () => {
+      setUnseenRequestCount((prev) => prev - 1);
     };
 
     pusherClient.bind("incoming_friend_requests", friendRequestHandler);
+    pusherClient.bind("new_friend", addedFriendHandler);
 
     return () => {
       pusherClient.unsubscribe(
         toPusherKey(`user:${sessionId}:incoming_friend_requests`)
       );
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
+
+      pusherClient.unbind("new_friend", addedFriendHandler);
       pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
     };
-  }, []);
-
-  const [unseenReqCount, setUnseenReqCount] = useState<number>(
-    initialUnseenRequestCount
-  );
+  }, [sessionId]);
 
   return (
     <Link className='flex items-center ml-1 ' href='/dashboard/requests'>
@@ -61,13 +53,13 @@ const FriendRequestsButton: FC<FriendRequestsButtonProps> = ({
         <User size={15} className='text-lime-600' />
       </span>
       <span className='truncate font-semibold'>Friend requests</span>
-      {unseenReqCount > 0 ? (
+      {unseenRequestCount > 0 ? (
         <div className='rounded-full w-5 gap-10 h-5 text-xs flex justify-center items-center p-1 ml-auto mr-2 text-white bg-lime-600'>
-          {unseenReqCount}
+          {unseenRequestCount}
         </div>
       ) : null}
     </Link>
   );
 };
 
-export default FriendRequestsButton;
+export default FriendRequestSidebarOptions;
