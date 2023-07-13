@@ -1,25 +1,52 @@
 "use client";
 
-import { cn } from "@lib/utils";
+import { pusherClient } from "@lib/pusher";
+import { cn, toPusherKey } from "@lib/utils";
 import { format } from "date-fns";
 import Image from "next/image";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 interface MessagesProps {
   initialMessages: Message[];
   sessionId: string;
   chatPartner: User;
-  sessionImg: string | undefined |null;
+  sessionImg: string | undefined | null;
+  chatId: string;
 }
 
 const Messages: FC<MessagesProps> = ({
   initialMessages,
   sessionId,
+  chatId,
   chatPartner,
   sessionImg,
 }) => {
   const scrollDownRef = useRef<HTMLDivElement | null>(null);
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+
+  useEffect(() => {
+    pusherClient.subscribe(toPusherKey(`chat:${chatId}`));
+
+    const messagesHandler = ({
+      senderId,
+      recieverId,
+      text,
+      timestamp,
+      id,
+    }: Message) => {
+      setMessages((prev) => [
+        { senderId, recieverId, text, timestamp, id },
+        ...prev,
+      ]);
+    };
+
+    pusherClient.bind("incoming-message", messagesHandler);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`chat:${chatId}`));
+      pusherClient.unbind("incoming-messages", messagesHandler);
+    };
+  }, []);
 
   return (
     <div
@@ -70,14 +97,13 @@ const Messages: FC<MessagesProps> = ({
                 className={cn("relative w-6 h-6", {
                   "order-2": isCurrentUser,
                   "order-1 mr-2": !isCurrentUser,
-                  "invisible": hasNextMessageFromSameUser,
+                  invisible: hasNextMessageFromSameUser,
                 })}
               >
                 <Image
-                sizes="1"
-                className="rounded-full mb-3 ml-1 mr-1"
+                  sizes='1'
+                  className='rounded-full mb-3 ml-1 mr-1'
                   fill
-                  
                   src={
                     isCurrentUser ? (sessionImg as string) : chatPartner.image
                   }

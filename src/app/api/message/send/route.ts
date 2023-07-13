@@ -5,6 +5,8 @@ import { getServerSession } from "next-auth";
 import { nanoid} from "nanoid";
 import { messageValidator } from "@lib/validation/message";
 import { z } from "zod";
+import { pusherServer } from "@lib/pusher";
+import { toPusherKey } from "@lib/utils";
 
 export async function POST(req: Request){
     try{
@@ -35,8 +37,9 @@ export async function POST(req: Request){
     }
 
     const timestamp = Date.now();
+    const id = nanoid();
     const messageData: Message= {
-        id: nanoid(),
+        id: id,
         senderId: session.user.id,
         recieverId: friendId,
         text: text,
@@ -46,6 +49,18 @@ export async function POST(req: Request){
     const message = messageValidator.parse(messageData);
 
     //validated, sending message
+pusherServer.trigger(
+  toPusherKey(`chat:${chatId}`),
+  "incoming-message",
+  {
+    senderId: session.user.id,
+    recieverId: friendId,
+    text: text,
+    timestamp: timestamp,
+    id:id,
+  }
+);
+
     await db.zadd(`chat:${chatId}:messages`, {
         score: timestamp,
         member: JSON.stringify(message)
