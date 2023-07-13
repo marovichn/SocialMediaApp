@@ -43,7 +43,7 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
           }}
           rows={1}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value.slice(0,200))}
           placeholder={`Message ${chatPartner.name}`}
         ></TextareaAutosize>
         <div

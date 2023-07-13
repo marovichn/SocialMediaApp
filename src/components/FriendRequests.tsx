@@ -1,9 +1,13 @@
 "use client";
 
+import { fetchRedis } from "@helpers/redis";
+import { pusherClient } from "@lib/pusher";
+import { toPusherKey } from "@lib/utils";
 import axios from "axios";
 import { Check, UserPlus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 interface FrendRequestsProps {
   incomingFriendRequests: IncomingFriendRequest[];
@@ -18,6 +22,25 @@ const FrendRequests: FC<FrendRequestsProps> = ({
   const [friendRequests, setFriendRequests] = useState<IncomingFriendRequest[]>(
     incomingFriendRequests
   );
+
+  useEffect(()=>{
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:incoming_friend_requests`));
+
+    const friendRequestHandler=({senderId,senderEmail}:IncomingFriendRequest)=>{
+      setFriendRequests((prev) => [...prev, {senderId, senderEmail}])
+      toast(`New friend request from ${senderEmail}`);
+    }
+
+    pusherClient.bind("incoming_friend_requests",friendRequestHandler);
+
+    return ()=>{
+      pusherClient.unsubscribe(
+        toPusherKey(`user:${sessionId}:incoming_friend_requests`)
+      );
+      pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
+    }
+  },[]);
+
   const acceptHandler =async (senderId: string)=>{
     await axios.post("/api/friends/accept", {id: senderId})
 
