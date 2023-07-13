@@ -28,7 +28,6 @@ const FrendRequests: FC<FrendRequestsProps> = ({
 
     const friendRequestHandler=({senderId,senderEmail}:IncomingFriendRequest)=>{
       setFriendRequests((prev) => [...prev, {senderId, senderEmail}])
-      toast(`New friend request from ${senderEmail}`);
     }
 
     pusherClient.bind("incoming_friend_requests",friendRequestHandler);

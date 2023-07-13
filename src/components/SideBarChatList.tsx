@@ -4,21 +4,17 @@ import { pusherClient } from "@lib/pusher";
 import { chatHrefConstructor, toPusherKey } from "@lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, } from "next/navigation";
 import { FC, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 interface SideBarChatListProps {
   friends: User[];
   sessionId: string;
 }
-interface ExtendedMessage {
+interface ExtendedMessage extends Message{
   senderImg: string;
   senderName: string;
-  senderId: string;
-  recieverId: string;
-  text: string;
-  timestamp: number;
-  id: string;
 }
 
 const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
@@ -37,10 +33,35 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
     timestamp,
     id,
     }: ExtendedMessage) => {
+      
+      const shouldNotify = pathname !== `/dashboard/chat/${chatHrefConstructor(sessionId, senderId)}`;
+
+      if(!shouldNotify) return;
       setUnseenMessages((prev) => [
         { senderImg, senderName, senderId, recieverId, text, timestamp, id },
         ...prev,
       ]);
+
+      toast(
+        <Link
+          href={`/dashboard/chat/${chatHrefConstructor(sessionId, senderId)}`}
+          className='flex gap-3 mx-5 justify-center items-center'
+        >
+          <Image
+            className='rounded-full mx-3'
+            src={senderImg}
+            alt={`${senderName}'s image`}
+            width={30}
+            height={30}
+          />
+
+          <div className='font-bold'>[{senderName}]:</div>
+          <p>{text.slice(0, 20)}...</p>
+        </Link>,
+        {
+          duration: 3000,
+        }
+      );
     };
     pusherClient.bind("new_message", chatHandler);
     const newFriendHandler = () => {

@@ -2,8 +2,9 @@
 
 import { pusherClient } from "@lib/pusher";
 import { toPusherKey } from "@lib/utils";
-import { User } from "lucide-react";
+import { MoveRightIcon, User, UserPlus } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -16,14 +17,28 @@ const FriendRequestsButton: FC<FriendRequestsButtonProps> = ({
   initialUnseenRequestCount,
   sessionId,
 }) => {
+  const pathname = usePathname();
 
   useEffect(() => {
     pusherClient.subscribe(
       toPusherKey(`user:${sessionId}:incoming_friend_requests`)
     );
 
-    const friendRequestHandler = ({senderEmail}: IncomingFriendRequest) => {
-      setUnseenReqCount((prev) => prev +1);
+    const friendRequestHandler = ({ senderEmail }: IncomingFriendRequest) => {
+      setUnseenReqCount((prev) => prev + 1);
+
+      toast(
+        <Link href='/dashboard/requests'>
+          <div className='flex gap-4'>
+            <UserPlus className='text-black' />
+            <p className='font-medium text-lg'>{senderEmail}</p>
+          </div>
+        </Link>,
+        {
+          className:
+            "flex gap-4 items-center justify-between bg-zinc-100 rounded-md p-7 hover:bg-white transition hover:border-lime-500 hover:border border border-opacity-0 my-2",
+        }
+      );
     };
 
     pusherClient.bind("incoming_friend_requests", friendRequestHandler);
