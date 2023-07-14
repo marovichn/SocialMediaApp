@@ -22,23 +22,46 @@ const UnseenChatToast: FC<UnseenChatToastProps> = ({
   t
 }) => {
   return (
-    <div className='ring-1 rinf-opacity-5 ring-black'><a
-      href={`/dashboard/chat/${chatHrefConstructor(sessionId, senderId)}`}
-      className={cn('flex gap-3 mx-5 justify-center items-center bg-white rounded-md p-5 shadow-lg transition ', {"animate-enter": t.visible, "animate-leave": !t.visible})}
+    <div
+      className={cn(
+        "max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5",
+        { "animate-enter": t.visible, "animate-leave": !t.visible }
+      )}
     >
-      <Image
-      onClick={()=>toast.dismiss(t.id)}
-        className='rounded-full mx-3'
-        src={senderImg}
-        alt={`${senderName}'s image`}
-        width={30}
-        height={30}
-      />
+      <a
+        onClick={() => toast.dismiss(t.id)}
+        href={`/dashboard/chat/${chatHrefConstructor(sessionId, senderId)}`}
+        className='flex-1 w-0 p-4'
+      >
+        <div className='flex items-start'>
+          <div className='flex-shrink-0 pt-0.5'>
+            <div className='relative h-10 w-10'>
+              <Image
+                fill
+                referrerPolicy='no-referrer'
+                className='rounded-full'
+                src={senderImg}
+                alt={`${senderName} profile picture`}
+              />
+            </div>
+          </div>
 
-      <div className='font-bold'>[{senderName}]:</div>
-      <p>{text.slice(0, 5)}...</p>
-    </a></div>
-    
+          <div className='ml-3 flex-1'>
+            <p className='text-sm font-medium text-gray-900'>{senderName}</p>
+            <p className='mt-1 text-sm text-gray-500'>{text.slice(1,10)} ...</p>
+          </div>
+        </div>
+      </a>
+
+      <div className='flex border-l border-gray-200'>
+        <button
+          onClick={() => toast.dismiss(t.id)}
+          className='w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-lime-600 hover:text-lime-500 focus:outline-none focus:ring-2 focus:ring-lime-500'
+        >
+          Close
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import UnseenChatToast from "./unseenChatToast";
+import UnseenChatToast from "./UnseenChatToast";
 
 interface SideBarChatListProps {
   friends: User[];
@@ -76,7 +76,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
       pusherClient.unbind("new_message", chatHandler);
       pusherClient.unbind("new_friend", newFriendHandler);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname?.includes("chat")) {
