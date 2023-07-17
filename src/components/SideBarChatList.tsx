@@ -22,6 +22,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
   const router = useRouter();
   const pathname = usePathname();
+  const [friendsState, setFriendsState] = useState(friends);
 
   useEffect(() => {
     pusherClient.subscribe(toPusherKey(`user:${sessionId}:chats`));
@@ -65,8 +66,8 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
       );
     };
     pusherClient.bind("new_message", chatHandler);
-    const newFriendHandler = () => {
-      router.refresh();
+    const newFriendHandler = (sender : User) => {
+      setFriendsState((prev)=>[...prev, sender]);
     };
     pusherClient.bind("new_friend", newFriendHandler);
 
@@ -88,7 +89,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
 
   return (
     <ul className='max-h-[25rem] overflow-y-auto -mx-2 space-y-1' role='list'>
-      {friends.sort().map((friend) => {
+      {friendsState.sort().map((friend) => {
         const selectedClasses = pathname?.includes(friend.id)
           ? "flex gap-1 items-center justify-between bg-white border-lime-500 border rounded-md p-4 text-gray-700 group leading-6 transition"
           : "flex gap-1 items-center justify-between bg-white hover:border-lime-500 hover:border border-transparent border rounded-md p-4 text-gray-700 group leading-6 transition";
@@ -98,7 +99,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
 
         return (
           <li key={friend.id}>
-            <Link
+            <a
               className={selectedClasses}
               href={`/dashboard/chat/${chatHrefConstructor(
                 sessionId,
@@ -124,7 +125,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
                   </div>
                 ) : null}
               </div>
-            </Link>
+            </a>
           </li>
         );
       })}
