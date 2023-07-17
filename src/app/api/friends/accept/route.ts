@@ -36,8 +36,13 @@ export async function POST(req: Request) {
       return new Response("This request is invalid", { status: 400 });
     }
     const acceptor = JSON.parse(await fetchRedis("get", `user:${session.user.id}`) as string)as User;
+    const sender = JSON.parse(
+      (await fetchRedis("get", `user:${idToAdd}`)) as string
+    ) as User;
 
-    pusherServer.trigger(toPusherKey(`user:${idToAdd}:friends`),"new_friend",acceptor);
+    pusherServer.trigger(toPusherKey(`user:${idToAdd}:friends`),"new_friend",[acceptor, sender]);
+    
+    pusherServer.trigger(toPusherKey(`user:${session.user.id}:friends`),"new_friend",[acceptor, sender]);
 
     await db.sadd(`user:${session.user.id}:friends`, idToAdd);
 

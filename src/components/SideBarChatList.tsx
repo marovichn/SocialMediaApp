@@ -66,8 +66,12 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
       );
     };
     pusherClient.bind("new_message", chatHandler);
-    const newFriendHandler = (sender : User) => {
-      setFriendsState((prev)=>[...prev, sender]);
+    const newFriendHandler = (both: User[]) => {
+      both.forEach((user) => {
+        if (sessionId !== user.id) {
+          setFriendsState((prev) => [...prev, user]);
+        }
+      });
     };
     pusherClient.bind("new_friend", newFriendHandler);
 
