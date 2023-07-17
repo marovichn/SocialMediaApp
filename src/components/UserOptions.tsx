@@ -33,7 +33,7 @@ const UserOptions: FC<UserOptionsProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [unseenReq, setUnseenReq] = useState<number>(0);
+  const [unseenReq, setUnseenReq] = useState<number>(initialUnseenRequestCount);
 
   useEffect(() => {
     pusherClient.subscribe(
@@ -47,8 +47,6 @@ const UserOptions: FC<UserOptionsProps> = ({
       if (!shouldNotify) {
         setUnseenReq(0);
         return;
-      }else{
-        setUnseenReq(initialUnseenRequestCount);
       }
       setUnseenReq((prev) => prev + 1);
       toast.custom((t) => {
@@ -90,7 +88,7 @@ const UserOptions: FC<UserOptionsProps> = ({
       );
       pusherClient.unbind("incoming_friend_requests", reqHandler);
     };
-  }, [pathname]);
+  }, [pathname, router, initialUnseenRequestCount, sessionId]);
 
   return (
     <li>

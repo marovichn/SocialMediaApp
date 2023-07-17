@@ -84,7 +84,7 @@ const SideBarChatList: FC<SideBarChatListProps> = ({ friends, sessionId }) => {
         return prev?.filter((msg) => !pathname.includes(msg.senderId));
       });
     }
-  }, [pathname]);
+  }, [pathname, router, sessionId]);
 
   return (
     <ul className='max-h-[25rem] overflow-y-auto -mx-2 space-y-1' role='list'>

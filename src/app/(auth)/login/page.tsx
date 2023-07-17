@@ -6,9 +6,8 @@ import {AiOutlineGoogle} from "react-icons/ai";
 import {signIn} from "next-auth/react"
 import { toast }from "react-hot-toast";
 
-interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
+const Page: FC = () => {
 const [isLoading, setIsLoading] = useState<boolean>(false);
 
 async function loginWithGoogle(){
@@ -50,4 +49,4 @@ async function loginWithGoogle(){
   );
 };
 
-export default page;
+export default Page;

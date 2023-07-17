@@ -1,6 +1,5 @@
 "use client";
 
-import { fetchRedis } from "@helpers/redis";
 import { pusherClient } from "@lib/pusher";
 import { toPusherKey } from "@lib/utils";
 import axios from "axios";
@@ -38,7 +37,7 @@ const FrendRequests: FC<FrendRequestsProps> = ({
       );
       pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
     }
-  },[]);
+  },[sessionId]);
 
   const acceptHandler =async (senderId: string)=>{
     await axios.post("/api/friends/accept", {id: senderId})
