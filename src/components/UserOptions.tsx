@@ -33,7 +33,7 @@ const UserOptions: FC<UserOptionsProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [unseenReq, setUnseenReq] = useState<number>(initialUnseenRequestCount);
+  const [unseenReq, setUnseenReq] = useState<number>(0);
 
   useEffect(() => {
     pusherClient.subscribe(
@@ -41,12 +41,14 @@ const UserOptions: FC<UserOptionsProps> = ({
     );
 
     const reqHandler = async ({ senderId }: { senderId: string }) => {
-      const sender: any = await db.get(`user:${senderId}`);
+      const sender: any= await db.get(`user:${senderId}`);
       const shouldNotify = pathname !== `/dashboard/requests`;
 
       if (!shouldNotify) {
         setUnseenReq(0);
         return;
+      }else{
+        setUnseenReq(initialUnseenRequestCount);
       }
       setUnseenReq((prev) => prev + 1);
       toast.custom((t) => {
