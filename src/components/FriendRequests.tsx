@@ -64,12 +64,14 @@ const FrendRequests: FC<FrendRequestsProps> = ({
           return (
             <div
               key={request.senderId}
-              className='flex gap-4 items-center justify-between bg-zinc-100 rounded-md p-7 hover:bg-white transition hover:border-lime-500 hover:border border border-opacity-0 my-2'
+              className='flex gap-4 items-center justify-between bg-zinc-100 rounded-md p-7 min-[0px]:max-md:p-6 hover:bg-white transition hover:border-lime-500 hover:border border border-opacity-0 my-2 min-[0px]:max-md:-mx-3'
             >
               {" "}
               <div className='flex gap-4'>
-                <UserPlus className='text-black' />
-                <p className='font-medium text-lg'>{request.senderEmail}</p>
+                <UserPlus className='text-blackmin-[0px]:max-md:w-6 min-[0px]:max-md:h-6' />
+                <p className='font-medium text-lg min-[0px]:max-md:text-md'>
+                  {request.senderEmail}
+                </p>
               </div>
               <div className='flex gap-4'>
                 <button
