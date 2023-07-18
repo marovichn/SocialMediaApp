@@ -29,8 +29,12 @@ const page = async ({}) => {
   )
 
   return (
-    <main className='pt-8 w-full h-full px-10'>
-      <h1 className='font-bold text-5xl mb-[65px] mt-10'>{requestsEmails.length === 0 ? "You don't have any requests." : "Friend Requests"}</h1>
+    <main className='py-10 w-full h-full px-10'>
+      <h1 className='font-bold text-5xl mb-20 min-[0px]:max-md:mt-8'>
+        {requestsEmails.length === 0
+          ? "You don't have any requests."
+          : "Friend Requests"}
+      </h1>
       <div className='flex flex-col gap-4'>
         <FriendRequests
           incomingFriendRequests={requestsEmails}

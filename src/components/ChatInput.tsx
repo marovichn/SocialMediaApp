@@ -3,8 +3,8 @@
 import { FC, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import Button from "./UI/Button";
-import axios from "axios";
 import { toast } from "react-hot-toast";
+import axios from "axios";
 
 interface ChatInputProps {
   chatPartner: User;
@@ -31,7 +31,7 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
   };
 
   return (
-    <div className='border-t mt-3 border-gray-200 px-4 pt-4 mb-2 sm:mb-0'>
+    <div className='border-t mt-3 border-gray-200 px-4 pt-4 mb-0 min-[0px]:max-md:mb-4'>
       <div className='relative flex-1 overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-lime-600'>
         <TextareaAutosize
           className='w-full block resize-none border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:py-1.t sm:leading-6'

@@ -54,14 +54,14 @@ const page: FC<PageProps> = async ({ params }: PageProps) => {
   const initialMessages = (await getChatMessages(chatId)) as any;
 
   return (
-    <div className='flex-1 flex flex-col justify-between h-full max-h-[calc(100vh-1rem)]'>
+    <div className='min-[0px]:max-md:mt-[3.65rem] xs:mt-[3.65rem]  flex-1 flex flex-col justify-between h-full max-h-[calc(100vh-1rem)] min-[0px]:max-md:max-h-[calc(100vh-4rem)] mb-2'>
       <div className='flex sm:items-center justify-between py-3 border-b border-gray-200'>
         <div className='relative flex items-center space-x-4'>
           <div className='relative'>
             <div className='ml-3 relative w-8 sm:w-12 h-8 sm:h-12'>
               <Image
                 className='rounded-full'
-                sizes="1"
+                sizes='1'
                 fill
                 alt={`${chatPartner.name} profile picture`}
                 src={chatPartner.image}
@@ -79,7 +79,13 @@ const page: FC<PageProps> = async ({ params }: PageProps) => {
           </div>
         </div>
       </div>
-      <Messages chatId={chatId} chatPartner={chatPartner} sessionImg={session.user.image} initialMessages={initialMessages} sessionId={session.user.id} />
+      <Messages
+        chatId={chatId}
+        chatPartner={chatPartner}
+        sessionImg={session.user.image}
+        initialMessages={initialMessages}
+        sessionId={session.user.id}
+      />
       <ChatInput chatId={chatId} chatPartner={chatPartner} />
     </div>
   );
