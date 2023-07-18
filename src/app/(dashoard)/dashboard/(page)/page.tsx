@@ -35,7 +35,7 @@ const page = async () => {
 
   return (
     <div className='px-4 w-full sm:px-6 lg:px-8 py-12'>
-      <h1 className='font-bold text-5xl mb-8'>Recent chats</h1>
+      <h1 className='font-bold text-5xl mb-8 mt-8'>Recent chats</h1>
       {friendsWithLastMessage.length === 0 ? (
         <p className='text-sm text-zinc-500'>Nothing to show here...</p>
       ) : (
@@ -82,7 +82,6 @@ const page = async () => {
           </div>
         ))
       )}
-      <MobileChatLayout></MobileChatLayout>
     </div>
   );
 };

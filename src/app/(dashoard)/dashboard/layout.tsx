@@ -3,13 +3,14 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
-import { Icons } from "@components/Icons";
+import { Icon, Icons } from "@components/Icons";
 import Image from "next/image";
 import SignOutButton from "@components/SignOutButton";
 import SideBarChatList from "@components/SideBarChatList";
 import { getFriendsByUserId } from "@helpers/get-friends-by-user-id";
 import UserOptions from "@components/UserOptions";
 import { fetchRedis } from "@helpers/redis";
+import MobileChatLayout from "@components/MobileChatLayout";
 
 interface LayoutProps {
   children: ReactNode;
@@ -26,10 +27,28 @@ const layout = async ({ children }: LayoutProps) => {
   if (!session) notFound();
 
   const friends = await getFriendsByUserId(session.user.id);
+  const sidebarOptions: SidebarOption[] = [
+    { id: 1, name: "Add friend", href: "/dashboard/add", Icon: "UserPlus" },
+  ];
+
+  interface SidebarOption {
+    id: number;
+    name: string;
+    href: string;
+    Icon: Icon;
+  }
 
   return (
     <div className='w-full flex h-screen'>
-      <div className='flex h-full w-full max-w-sm grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
+      <div className='md:hidden '>
+        <MobileChatLayout
+          friends={friends}
+          session={session}
+          sidebarOptions={sidebarOptions}
+          unseenRequestCount={initialUnseenReqCount}
+        />
+      </div>
+      <div className='hidden md:flex h-full w-full max-w-sm grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
         <Link href='/dashboard' className='flex h-16 shrink-0 items-center'>
           <Icons.Logo className='h-8 w-auto text-lime-600' />
         </Link>
@@ -46,12 +65,11 @@ const layout = async ({ children }: LayoutProps) => {
           <ul role='list' className='flex flex-1 flex-col gap-y-7'>
             <li>
               <SideBarChatList friends={friends} sessionId={session.user.id} />
-              
             </li>
-              <UserOptions
-                initialUnseenRequestCount={initialUnseenReqCount}
-                sessionId={session.user.id}
-              />
+            <UserOptions
+              initialUnseenRequestCount={initialUnseenReqCount}
+              sessionId={session.user.id}
+            />
 
             <li className='-mx-6 mt-auto flex items-center'>
               <div className='flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900'>
