@@ -31,9 +31,6 @@ const page = async () => {
       };
     })
   );
-
-  console.log(friendsWithLastMessage.map(friend=>friend.lastMessage.text))
-
   return (
     <div className='px-4 w-full sm:px-6 lg:px-8 py-10'>
       <h1 className='font-bold text-5xl mb-20 min-[0px]:max-md:mt-8'>Recent chats</h1>
