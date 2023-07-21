@@ -1,5 +1,6 @@
-const upstashRedisRestUrl = process.env.UPSTASH_REDIS_REST_URL;
-const authToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+const upstashRedisRestUrl = "https://inspired-dingo-37040.upstash.io";
+const authToken =
+  "AZCwASQgZTA0MWU2MDAtYjUyMS00ODNiLWFhZWMtOWZhNzUwOTMzYTRmZGIzMzVmODk2OTMwNGQ2NjkzZmFmZTFkNDJlODljYjU=";
 
 type Command = "zrange" | "sismember" | "get" | "smembers";
 
