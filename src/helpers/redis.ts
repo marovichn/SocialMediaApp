@@ -12,7 +12,7 @@ export async function fetchRedis(
 
   const response = await fetch(commandUrl, {
     headers: {
-      Authorization: `Bearer ${authToken}`,
+      /* Authorization: `Bearer ${authToken}`, */
     },
     cache: "no-store",
   });
