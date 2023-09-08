@@ -10,6 +10,7 @@ import { Icons } from "@components/Icons";
 
 const Page: FC = () => {
 const [isLoading, setIsLoading] = useState<boolean>(false);
+//LOG in WITH GOOGLE
 
 async function loginWithGoogle(){
     setIsLoading(true);
