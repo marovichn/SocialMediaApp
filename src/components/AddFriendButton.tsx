@@ -42,7 +42,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
         return;
       }
 
-      setError("email", {message: "Something wnt wrong"});
+      setError("email", {message: "Something went wrong"});
     }
   };
 

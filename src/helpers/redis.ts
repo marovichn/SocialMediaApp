@@ -10,9 +10,7 @@ export async function fetchRedis(
   const commandUrl = `${upstashRedisRestUrl}/${command}/${args.join("/")}`;
 
   const response = await fetch(commandUrl, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: {},
     cache: "no-store",
   });
 
